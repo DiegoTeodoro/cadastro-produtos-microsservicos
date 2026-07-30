@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: estoque-service
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3308/estoque_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:estoque}
+    password: ${DB_PASSWORD:estoque123}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080

@@ -1,0 +1,62 @@
+services:
+  produto-db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: produtos_db
+      MYSQL_USER: produto
+      MYSQL_PASSWORD: produto123
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - "3307:3306"
+    volumes:
+      - produto_dados:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  estoque-db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: estoque_db
+      MYSQL_USER: estoque
+      MYSQL_PASSWORD: estoque123
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - "3308:3306"
+    volumes:
+      - estoque_dados:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  produto-service:
+    build: ./produto-service
+    ports:
+      - "8081:8080"
+    environment:
+      DB_URL: jdbc:mysql://produto-db:3306/produtos_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      DB_USERNAME: produto
+      DB_PASSWORD: produto123
+    depends_on:
+      produto-db:
+        condition: service_healthy
+
+  estoque-service:
+    build: ./estoque-service
+    ports:
+      - "8082:8080"
+    environment:
+      DB_URL: jdbc:mysql://estoque-db:3306/estoque_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      DB_USERNAME: estoque
+      DB_PASSWORD: estoque123
+    depends_on:
+      estoque-db:
+        condition: service_healthy
+
+volumes:
+  produto_dados:
+  estoque_dados:
