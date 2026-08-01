@@ -79,19 +79,3 @@ GET http://localhost:8082/estoques/produto/1
 cd produto-service
 ./mvnw test
 ```
-
-No Windows:
-
-```bash
-mvnw.cmd test
-```
-
-Repita o comando dentro de `estoque-service`.
-
-## Git
-
-```bash
-git init
-git add .
-git commit -m "feat: cria microsservicos de produtos e estoque"
-```
